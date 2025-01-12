@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import React, { Suspense } from "react";
 import { AlertCircle, InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./_components/CreateWorkflowDialog";
+import WorkflowCard from "./_components/WorkflowCard";
 
 function page() {
   return (
@@ -57,7 +58,13 @@ async function UserWorkflows() {
       );
     }
 
-    return <div></div>;
+    return (
+      <div className="grid grid-cols-1 gap-4">
+        {workflows.map((workflow) => (
+          <WorkflowCard key={workflow.id} workflow={workflow} />
+        ))}
+      </div>
+    );
   } catch (error) {
     return (
       <Alert variant={"destructive"}>

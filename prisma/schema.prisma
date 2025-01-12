@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,17 +8,14 @@ datasource db {
 }
 
 model Workflow {
-  id            String   @id @default(cuid())
-  userId        String
-  name          String
-  description   String?
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  definition  String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  definition     String
-  status        String
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  // User can not have more than one workflow with the same name
   @@unique([userId, name])
 }
