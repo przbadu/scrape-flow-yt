@@ -18,7 +18,7 @@ import { Separator } from "./ui/separator";
 
 const routes = [
   {
-    href: "",
+    href: "/",
     name: "Home",
     icon: HomeIcon,
   },
