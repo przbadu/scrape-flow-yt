@@ -8,8 +8,9 @@ import {
   ReactFlow,
   useEdgesState,
   useNodesState,
+  useReactFlow,
 } from "@xyflow/react";
-import React from "react";
+import React, { useEffect } from "react";
 
 import "@xyflow/react/dist/style.css";
 import { CreateFlowNode } from "@/lib/workflow/createFlowNode";
@@ -26,10 +27,25 @@ const fitViewOptions = {
 };
 
 const FlowEditor = ({ workflow }: { workflow: Workflow }) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([
-    CreateFlowNode(TaskType.LAUNCH_BROWSER),
-  ]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { setViewport } = useReactFlow();
+
+  useEffect(() => {
+    try {
+      const flow = JSON.parse(workflow.definition);
+      if (!flow) return;
+      setNodes(flow.nodes || []);
+      setEdges(flow.edges || []);
+      if (!flow.viewport) return;
+
+      // No effect because we are using fitView property, remove fitView if you want to use this viewPort.
+      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+      setViewport({ x, y, zoom });
+    } catch (error) {
+      console.error(error);
+    }
+  }, [setNodes, setEdges, workflow.definition, setViewport]);
 
   return (
     <main className="h-full w-full">
@@ -44,7 +60,7 @@ const FlowEditor = ({ workflow }: { workflow: Workflow }) => {
         fitViewOptions={fitViewOptions}
         fitView
       >
-        <Controls  position={"top-left"} fitViewOptions={fitViewOptions}/>
+        <Controls position={"top-left"} fitViewOptions={fitViewOptions} />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
     </main>
